@@ -17,9 +17,15 @@ object Traits {
     val genes: List[Gen]
   }
 
-  trait Individual extends Codificable{
+  trait Individual extends Codificable with Ordered[Individual]{
     val chromosomes: List[Chromosome]
+    lazy val fitness = evalFitness()
 
-    def fitness():Float
+    def evalFitness():Float
+    def compare(that: Individual) = {
+      if (this.fitness == that.fitness) 0
+      else if (this.fitness > that.fitness) 1
+      else -1
+    }
   }
 }

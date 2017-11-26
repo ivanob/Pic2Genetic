@@ -5,10 +5,9 @@ import genetic.common.Types.Population
 
 
 object GeneticOps {
-  def initialization(): Population = ???
+  def initialization(size: Int): Population = ???
   def ordering(p: Population):Population = ???
-  def crossover(i1: Individual, i2: Individual) = ???
-  def mutation(i: Individual): Individual = ???
-  def selection(p: Population): Population = ???
-
+  def crossover(i1: Individual, i2: Individual, mergingPoint: Int) = ???
+  def mutation(i: Individual, mutationPoint: Int): Individual = ???
+  def selection(p: Population, numSelected: Int): Population = ???
 }
