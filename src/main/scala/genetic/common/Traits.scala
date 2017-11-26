@@ -5,8 +5,9 @@ import genetic.common.Types.Binary
 object Traits {
 
   trait Codificable{
+    lazy val binaryRepr: Binary
     def encode():Binary
-    def decode():Binary
+    def decode(bin: Binary):Codificable
   }
 
   trait Gen extends Codificable{
