@@ -15,9 +15,11 @@ object Traits {
 
   trait Chromosome extends Codificable{
     val genes: List[Gen]
-
   }
+
   trait Individual extends Codificable{
-    val chromosomes: List[Chromosome]\
+    val chromosomes: List[Chromosome]
+
+    def fitness():Float
   }
 }
