@@ -4,21 +4,20 @@ import genetic.common.Types.Binary
 
 object Traits {
 
-  trait Codificable{
+  trait Codificable[T]{
     lazy val binaryRepr: Binary
     def encode():Binary
-    def decode(bin: Binary):Codificable
+    def decode(bin: Binary):T
   }
 
-  trait Gen extends Codificable{
-
+  trait Gen extends Codificable[Gen]{
   }
 
-  trait Chromosome extends Codificable{
+  trait Chromosome extends Codificable[Chromosome]{
     val genes: List[Gen]
   }
 
-  trait Individual extends Codificable with Ordered[Individual]{
+  trait Individual extends Codificable[Individual] with Ordered[Individual]{
     val chromosomes: List[Chromosome]
     lazy val fitness = evalFitness()
 

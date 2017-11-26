@@ -1,4 +1,4 @@
-package app.impl
+package pic2Gen
 
 import genetic.common.Traits.Individual
 
