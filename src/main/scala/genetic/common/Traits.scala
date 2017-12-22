@@ -10,12 +10,14 @@ object Traits {
     def binaryLength():Int
   }
 
-  trait Gen[A <: AnyVal] extends Codificable[Gen]{
-    val a: A
+  /**
+    * Stores the type of the gen, not the value
+    */
+  trait Gen[T <: AnyVal] extends Codificable[Gen[T]]{
+    val a: T
   }
 
   abstract case class Chromosome(val genes: List[Gen]) extends Codificable[Chromosome]{
-
     def encode():Binary = {
       genes.foldRight(List[Binary]())((x, acc) => List(x.encode()):::acc)
     }
@@ -26,7 +28,7 @@ object Traits {
         case Nil => Nil
       }
       //val g = genes.foldRight(x => x.decode(bin.slice(0, x.binaryLength())))
-      val g = go(bin, genes)
+      val g = go(genes, bin)
       Chromosome(g)
     }
 

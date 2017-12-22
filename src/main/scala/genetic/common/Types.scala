@@ -1,8 +1,10 @@
 package genetic.common
 
-import genetic.common.Traits.Individual
 
 object Types {
   type Binary = List[Int]
   type Population = List[Individual]
+  type Gen = AnyVal
+  type Chromosome = List[Gen]
+  type Individual = List[Chromosome]
 }
