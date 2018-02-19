@@ -4,49 +4,37 @@ import genetic.common.Types.Binary
 
 object Traits {
 
-  trait Codificable[T]{
+  sealed trait Codificable[T]{
     def encode():Binary
     def decode(bin: Binary):T
     def binaryLength():Int
   }
 
-  /**
-    * Stores the type of the gen, not the value
-    */
-  trait Gen[T <: AnyVal] extends Codificable[Gen[T]]{
-    val a: T
+  sealed trait WrapType[A] extends Codificable[A]
+  case class WrapInt(value:Int) extends WrapType[Int] {
+    override def encode(): Binary = ???
+
+    override def decode(bin: Binary): Int = ???
+
+    override def binaryLength(): Int = ???
+  }
+  case class WrapFloat(value:Float) extends WrapType[Float] {
+    override def encode(): Binary = ???
+
+    override def decode(bin: Binary): Float = ???
+
+    override def binaryLength(): Int = ???
   }
 
-  abstract case class Chromosome(val genes: List[Gen]) extends Codificable[Chromosome]{
-    def encode():Binary = {
-      genes.foldRight(List[Binary]())((x, acc) => List(x.encode()):::acc)
-    }
+  case class Gen(v: List[WrapType[_]], life: (List[WrapType[_]])=>Boolean)
 
-    def decode(bin: Binary):Chromosome = {
-      def go(genes: List[Gen], bin: Binary): List[Gen] = genes match {
-        case x :: xs =>
-        case Nil => Nil
-      }
-      //val g = genes.foldRight(x => x.decode(bin.slice(0, x.binaryLength())))
-      val g = go(genes, bin)
-      Chromosome(g)
-    }
+  case class Chromo(v: List[Gen], life: (List[Gen])=>Boolean)
 
-    def binaryLength():Int = {
-      genes.foldRight(0)((x, acc) => acc+x.binaryLength())
-    }
+  case class Individual(v: List[Chromo], life: (List[Chromo])=>Boolean)
 
-  }
-
-  trait Individual extends Codificable[Individual] with Ordered[Individual]{
-    val chromosomes: List[Chromosome]
-    lazy val fitness = evalFitness()
-
-    def evalFitness():Float
-    def compare(that: Individual) = {
-      if (this.fitness == that.fitness) 0
-      else if (this.fitness > that.fitness) 1
-      else -1
-    }
-  }
+  case class GenGenerator(generateRandomIndividual: ()=>Individual,
+                          lifeIndividual:(List[Chromo])=>Boolean,
+                          lifeChromo: (List[Gen])=>Boolean,
+                          lifeGen: (List[WrapType[_]])=>Boolean
+                         )
 }
