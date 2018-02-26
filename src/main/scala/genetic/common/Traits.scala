@@ -26,15 +26,21 @@ object Traits {
     override def binaryLength(): Int = ???
   }
 
+  type GenBody = List[WrapType[_]]
+
   case class Gen(v: List[WrapType[_]], life: (List[WrapType[_]])=>Boolean)
 
   case class Chromo(v: List[Gen], life: (List[Gen])=>Boolean)
 
   case class Individual(v: List[Chromo], life: (List[Chromo])=>Boolean)
 
-  case class GenGenerator(generateRandomIndividual: ()=>Individual,
+  def genIntRandomGenerator(numGens: Int, randomInt: ()=>Int): GenBody = {
+    List.tabulate(numGens)(_ => WrapInt(randomInt()))
+  }
+
+  case class IndividualRandomGenerator(generateRandomIndividual: ()=>Individual/*,
                           lifeIndividual:(List[Chromo])=>Boolean,
                           lifeChromo: (List[Gen])=>Boolean,
-                          lifeGen: (List[WrapType[_]])=>Boolean
+                          lifeGen: (List[WrapType[_]])=>Boolean*/
                          )
 }
