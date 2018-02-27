@@ -27,15 +27,23 @@ object Traits {
   }
 
   type GenBody = List[WrapType[_]]
+  type ChromoBody = List[GenBody]
+  type IndividualBody = List[ChromoBody]
 
-  case class Gen(v: List[WrapType[_]], life: (List[WrapType[_]])=>Boolean)
+  case class Gen(v: GenBody, life: (GenBody)=>Boolean)
 
-  case class Chromo(v: List[Gen], life: (List[Gen])=>Boolean)
+  case class Chromo(v: ChromoBody, life: (ChromoBody)=>Boolean)
 
-  case class Individual(v: List[Chromo], life: (List[Chromo])=>Boolean)
+  case class Individual(v: IndividualBody, life: (IndividualBody)=>Boolean)
 
   def genIntRandomGenerator(numGens: Int, randomInt: ()=>Int): GenBody = {
     List.tabulate(numGens)(_ => WrapInt(randomInt()))
+  }
+  def chromoRandomGenerator(numGens: Int, randomGenBody: ()=>GenBody): ChromoBody = {
+    List.tabulate(numGens)(_ => randomGenBody())
+  }
+  def individualRandomGenerator(numChromos: Int, randomChromoBody: ()=>ChromoBody): IndividualBody = {
+    List.tabulate(numChromos)(_ => randomChromoBody())
   }
 
   case class IndividualRandomGenerator(generateRandomIndividual: ()=>Individual/*,
