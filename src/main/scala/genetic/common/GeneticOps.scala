@@ -3,8 +3,11 @@ package genetic.common
 import genetic.common.Traits.Individual
 import genetic.common.Types.Population
 
-
+/**
+  * This object contains the genetic operations needed in a genetic algorithm
+  */
 object GeneticOps {
+  def initialization(size: Int): Population = ???
   /*def initialization(size: Int): Population = ???
   def ordering(p: Population):Population = p.sorted
   def crossover(i1: Individual, i2: Individual, mergingPoint: Int): (Individual,Individual) = ???/*{
