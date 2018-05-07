@@ -34,18 +34,19 @@ object Traits {
   type IndividualBody = List[ChromoBody]
 
   /*** Functions to generate bodies ***/
-  def genIntBodyRandomGenerator(numGens: Int, randomInt: ()=>Int): GenBody = {
-    List.tabulate(numGens)(_ => WrapInt(randomInt()))
+  def genIntRandomGenerator(tamGen: Int, randomInt: ()=>Int, lifeFun: (GenBody)=>Boolean): Gen = {
+    Gen(List.tabulate(tamGen)(_ => WrapInt(randomInt())), lifeFun)
   }
-  def chromoBodyRandomGenerator(numGens: Int, randomGenBody: ()=>GenBody): ChromoBody = {
-    List.tabulate(numGens)(_ => randomGenBody())
+  def chromoRandomGenerator(numGens: Int, randomGenBody: ()=>GenBody, lifeFunChromo: (ChromoBody)=>Boolean)
+                           (tamGen: Int, randomInt: ()=>Int, lifeFunGen: (GenBody)=>Boolean): Chromo = {
+    val a = (1 to numGens).map(_=>genIntRandomGenerator(tamGen, randomInt, lifeFunGen)).toList
+    Chromo(a, lifeFunChromo)
   }
-  def individualBodyRandomGenerator(numChromos: Int, randomChromoBody: ()=>ChromoBody): IndividualBody = {
-    List.tabulate(numChromos)(_ => randomChromoBody())
-  }
-  //Generator of a full individual
-  def individualGenerator(numChromos:Int, numGens:Int): Individual ={
-    individualBodyRandomGenerator(2, ()=>{chromoBodyRandomGenerator(5, ()=>{genIntBodyRandomGenerator(3, ()=>1)})})
+  def individualRandomGenerator(numGens: Int, randomGenBody: ()=>GenBody, lifeFunChromo: (ChromoBody)=>Boolean)
+                               (tamGen: Int, randomInt: ()=>Int, lifeFunGen: (GenBody)=>Boolean)
+                               (numChromos: Int, lifeFunInd: (IndividualBody)=>Boolean): Individual = {
+      val a = (1 to numChromos).map(_=>chromoRandomGenerator(numGens, randomGenBody, lifeFunChromo)(tamGen, randomInt, lifeFunGen)).toList
+      Individual(a, lifeFunInd)
   }
 
   case class Gen(v: GenBody, life: (GenBody)=>Boolean)
