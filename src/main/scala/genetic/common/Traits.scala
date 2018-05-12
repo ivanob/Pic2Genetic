@@ -30,8 +30,8 @@ object Traits {
   case class WrapFloat(value:Float) extends WrapType[Float] with FloatCodificable
 
   type GenBody = List[WrapType[_]]
-  type ChromoBody = List[GenBody]
-  type IndividualBody = List[ChromoBody]
+  type ChromoBody = List[Gen]
+  type IndividualBody = List[Chromo]
 
   /*** Functions to generate bodies ***/
   def genIntRandomGenerator(tamGen: Int, randomInt: ()=>Int, lifeFun: (GenBody)=>Boolean): Gen = {
@@ -45,14 +45,14 @@ object Traits {
   def individualRandomGenerator(numGens: Int, randomGenBody: ()=>GenBody, lifeFunChromo: (ChromoBody)=>Boolean)
                                (tamGen: Int, randomInt: ()=>Int, lifeFunGen: (GenBody)=>Boolean)
                                (numChromos: Int, lifeFunInd: (IndividualBody)=>Boolean): Individual = {
-      val a = (1 to numChromos).map(_=>chromoRandomGenerator(numGens, randomGenBody, lifeFunChromo)(tamGen, randomInt, lifeFunGen)).toList
-      Individual(a, lifeFunInd)
+    val a = (1 to numChromos).map(_=>chromoRandomGenerator(numGens, randomGenBody, lifeFunChromo)(tamGen, randomInt, lifeFunGen)).toList
+    Individual(a, lifeFunInd)
   }
 
-  case class Gen(v: GenBody, life: (GenBody)=>Boolean)
+  case class Gen(v: GenBody, life: (GenBody)=>Boolean){require(life(v))}
 
-  case class Chromo(v: List[Gen], life: (ChromoBody)=>Boolean)
+  case class Chromo(v: ChromoBody, life: (ChromoBody)=>Boolean){require(life(v))}
 
-  case class Individual(v: List[Chromo], life: (IndividualBody)=>Boolean)
+  case class Individual(v: IndividualBody, life: (IndividualBody)=>Boolean){require(life(v))}
 
 }
