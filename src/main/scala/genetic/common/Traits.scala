@@ -37,15 +37,15 @@ object Traits {
   def genIntRandomGenerator(tamGen: Int, randomInt: ()=>Int, lifeFun: (GenBody)=>Boolean): Gen = {
     Gen(List.tabulate(tamGen)(_ => WrapInt(randomInt())), lifeFun)
   }
-  def chromoRandomGenerator(numGens: Int, randomGenBody: ()=>GenBody, lifeFunChromo: (ChromoBody)=>Boolean)
+  def chromoRandomGenerator(numGens: Int, lifeFunChromo: (ChromoBody)=>Boolean)
                            (tamGen: Int, randomInt: ()=>Int, lifeFunGen: (GenBody)=>Boolean): Chromo = {
     val a = (1 to numGens).map(_=>genIntRandomGenerator(tamGen, randomInt, lifeFunGen)).toList
     Chromo(a, lifeFunChromo)
   }
-  def individualRandomGenerator(numGens: Int, randomGenBody: ()=>GenBody, lifeFunChromo: (ChromoBody)=>Boolean)
-                               (tamGen: Int, randomInt: ()=>Int, lifeFunGen: (GenBody)=>Boolean)
-                               (numChromos: Int, lifeFunInd: (IndividualBody)=>Boolean): Individual = {
-    val a = (1 to numChromos).map(_=>chromoRandomGenerator(numGens, randomGenBody, lifeFunChromo)(tamGen, randomInt, lifeFunGen)).toList
+  def individualRandomGenerator(numChromos: Int, lifeFunInd: (IndividualBody)=>Boolean)
+                               (numGens: Int, lifeFunChromo: (ChromoBody)=>Boolean)
+                               (tamGen: Int, randomInt: ()=>Int, lifeFunGen: (GenBody)=>Boolean): Individual = {
+    val a = (1 to numChromos).map(_=>chromoRandomGenerator(numGens, lifeFunChromo)(tamGen, randomInt, lifeFunGen)).toList
     Individual(a, lifeFunInd)
   }
 
